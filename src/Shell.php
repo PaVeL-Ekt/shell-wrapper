@@ -30,6 +30,11 @@ class Shell
         ]
     ];
 
+    /**
+     * @var array $listeners Список слушателей, которые будут получать вывод из стандартных потоков ввывода и ошибок.
+     */
+    protected $listeners = [];
+
     public function __construct($workDirectory = null)
     {
         !empty($workDirectory) && !$this->cd($workDirectory) && $this->workDirectory = '/';
@@ -64,10 +69,20 @@ class Shell
     protected function readStreamContent(&$stream, &$data, $timeout = 300.00)
     {
         $readStart = microtime(true);
-        $feofTime;
+        $feofTime = null;
 
         while (!$this->saveFeof($stream, $feofTime) && ($feofTime - $readStart) < $timeout) {
-            $data .= fgets($stream, 1024);
+            $buf = fgets($stream, 1024);
+            $data .= $buf;
+            if (!empty($this->listeners)) {
+                foreach($this->listeners as $listenMethod) {
+                    if (is_callable($listenMethod)) {
+                        $listenMethod($buf);
+                    } else {
+                        $listenMethod['method']->invokeArgs($listenMethod['object'], [$buf]);
+                    }
+                }
+            }
         }
         if ((microtime(true) - $readStart) > $timeout) {
             return false;
@@ -192,5 +207,28 @@ class Shell
             }
         }
         return false;
+    }
+
+    /**
+     * Регистрация слушателя
+     * @param $name Имя слушателя.
+     * @param $listener метод слушателя.
+     */
+    public function registerListener($name, $listener)
+    {
+        if (is_callable($listener) || (is_array($listener) && $listener['method'] instanceof \ReflectionMethod)) {
+            $this->listeners[$name] = $listener;
+        }
+    }
+
+    /**
+     * Отписка слушателя
+     * @param $name Имя слушателя
+     */
+    public function unregisterListener($name)
+    {
+        if (isset($this->listeners[$name])) {
+            unset ($this->listeners[$name]);
+        }
     }
 }
