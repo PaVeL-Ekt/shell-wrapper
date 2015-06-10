@@ -75,12 +75,8 @@ class Shell
             $buf = fgets($stream, 1024);
             $data .= $buf;
             if (!empty($this->listeners)) {
-                foreach($this->listeners as $listenMethod) {
-                    if (is_callable($listenMethod)) {
-                        $listenMethod($buf);
-                    } else {
-                        $listenMethod['method']->invokeArgs($listenMethod['object'], [$buf]);
-                    }
+                foreach($this->listeners as $object) {
+                    $object->shellListener($this, $buf);
                 }
             }
         }
@@ -210,22 +206,22 @@ class Shell
     }
 
     /**
-     * Регистрация слушателя
+     * Подписка объекта для получения данных
      * @param $name Имя слушателя.
-     * @param $listener метод слушателя.
+     * @param $object метод слушателя.
      */
-    public function registerListener($name, $listener)
+    public function subscribeObject($name, $object)
     {
-        if (is_callable($listener) || (is_array($listener) && $listener['method'] instanceof \ReflectionMethod)) {
-            $this->listeners[$name] = $listener;
+        if (is_object($object) && method_exists($object, 'shellListener')) {
+            $this->listeners[$name] = $object;
         }
     }
 
     /**
-     * Отписка слушателя
+     * Отписка объекта
      * @param $name Имя слушателя
      */
-    public function unregisterListener($name)
+    public function unsubscribeObject($name)
     {
         if (isset($this->listeners[$name])) {
             unset ($this->listeners[$name]);

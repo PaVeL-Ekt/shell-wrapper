@@ -22,7 +22,10 @@
   },
   "autoload": {
     "psr-4": {
-      "PavelEkt\\Wrappers\\": "src"
+      "PavelEkt\\Wrappers\\": "src",
+      "PavelEkt\\Wrappers\\Shell\\Abstracts\\": "src/abstracts",
+      "PavelEkt\\Wrappers\\Shell\\Exceptions\\": "src/exceptions",
+      "PavelEkt\\Wrappers\\Shell\\Interfaces\\": "src/interfaces"
     }
   }
 }
