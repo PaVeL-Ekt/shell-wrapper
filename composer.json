@@ -1,0 +1,33 @@
+{
+  "name": "pavel-ekt/shell-wrapper",
+  "description": "provides a simple way to work with shell commands",
+  "keywords": [
+    "shell",
+    "exec",
+    "execute",
+    "wrapper",
+    "shell-wrapper"
+  ],
+  "homepage": "https://github.com/pavel-ekt/shell-wrapper",
+  "license": "BSD-3-Clause",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Pavel Chernoskutov",
+      "email": "pavel-ekt@yandex.ru"
+    }
+  ],
+  "require": {
+    "php": ">= 5.4",
+    "pavel-ekt/base-components": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "PavelEkt\\Wrappers\\": "src",
+      "PavelEkt\\Wrappers\\Shell\\Abstracts\\": "src/abstracts",
+      "PavelEkt\\Wrappers\\Shell\\Exceptions\\": "src/exceptions",
+      "PavelEkt\\Wrappers\\Shell\\Interfaces\\": "src/interfaces",
+      "PavelEkt\\Wrappers\\Shell\\Components\\": "src/components"
+    }
+  }
+}
