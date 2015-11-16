@@ -1,17 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: pavel
- * Date: 08.04.15
- * Time: 10:37
- */
 
 namespace PavelEkt\Wrappers;
 
+use PavelEkt\BaseComponents\abstracts\BaseComponent;
 /**
  * Класс для запуска приложений, с указанием рабочего каталога.
  */
-class Shell
+class Shell extends BaseComponent
 {
     /**
      * @var string $workDirectory Текущая рабочая директория.
@@ -187,7 +182,8 @@ class Shell
      * @param string $path путь, по которому необходимо перейти.
      * @return bool
      */
-    public function cd($path)
+
+    public function cd($path = '/')
     {
         if ($path[0] == '/') {
             $realPath = realpath($path);
