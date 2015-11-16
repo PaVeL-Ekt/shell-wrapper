@@ -182,6 +182,7 @@ class Shell extends BaseComponent
      * @param string $path путь, по которому необходимо перейти.
      * @return bool
      */
+
     public function cd($path = '/')
     {
         if ($path[0] == '/') {
